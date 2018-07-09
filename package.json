@@ -1,0 +1,19 @@
+{
+  "name": "orcws",
+  "version": "1.0.0",
+  "description": "websocket server provider",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/nodemon/bin/nodemon.js server/index.js --exec 'npm run lint && node'",
+    "lint": "true || ./node_modules/.bin/eslint **/*.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lint": "^1.1.2",
+    "nodejs-websocket": "^1.7.1",
+    "nodemon": "^1.17.5",
+    "sse": "0.0.8"
+  }
+}
