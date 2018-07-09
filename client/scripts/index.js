@@ -31,12 +31,18 @@ function nodejsWebsocket () {
 }
 var pushNotify = null
 window.addEventListener("load", function () {
-    //nodejsWebsocket();
+	//nodejsWebsocket();
+	var eventList = document.querySelector('ul');
     var eventSourceInitDict = {headers: {'Cookie': 'test=test'}};
-    pushNotify = new EventSource("//127.0.0.1:8070", eventSourceInitDict)
-    pushNotify.onmessage = function (event) {
-        
-        console.log(event.data)
-        //pushNotify.close()
+    pushNotify = new EventSource("//localhost:8070", eventSourceInitDict)
+    pushNotify.onmessage = function (e) {
+	   
+		debugger
+
+		var newElement = document.createElement("li");
+
+		newElement.textContent = "message: " + e.data;
+		eventList.appendChild(newElement);
+       
     }
 })

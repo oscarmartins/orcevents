@@ -3,16 +3,38 @@ const serve = require('./nodejs-websocket')
 serve.init();
  */
 var SSE = require('sse'), http = require('http')
- 
+
+const connections = []
+
 var server = http.createServer(function(req, res) {
-  console.log(req)
-  if (req.headers.accept && req.headers.accept == 'text/event-stream') {
-    sendSSE(req, res);
-  } else {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    //res.write(fs.readFileSync(__dirname + '/sse-node.html'));
-    res.end();
-  }
+
+	/**
+	 if (req.headers.accept && req.headers.accept == 'text/event-stream') {
+			sendSSE(req, res);
+		} else {
+			res.writeHead(200, {'Content-Type': 'text/html'});
+			//res.write(fs.readFileSync(__dirname + '/sse-node.html'));
+			res.end();
+		}
+	 */
+
+	const httpObj = {req: req, res: res}
+	connections.push(httpObj)
+	
+	if (connections.length >= 3) {
+		for (var _c = 0; _c < connections.length; _c++) {
+			var jj = connections[_c]
+			if (jj.req.headers.accept && jj.req.headers.accept == 'text/event-stream') {
+				sendSSE(jj.req, jj.res);
+			} else {
+				jj.res.writeHead(200, {'Content-Type': 'text/html'});
+				//res.write(fs.readFileSync(__dirname + '/sse-node.html'));
+				jj.res.end();
+			}
+		}
+	}
+
+  
 
 
 }).listen(8070)
