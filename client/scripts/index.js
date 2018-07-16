@@ -29,16 +29,39 @@ function nodejsWebsocket () {
 		}
 	}
 }
+
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 var pushNotify = null
 window.addEventListener("load", function () {
 	//nodejsWebsocket();
+
+	var nickname = prompt("Choose a nickname")
+	if (nickname) {
+		setCookie('username', nickname, 1);
+	}
+
 	var eventList = document.querySelector('ul');
     var eventSourceInitDict = {withCredentials: true, headers: {'Cookie': 'test=test', 'Oscar': '123'}};
 	pushNotify = new EventSource("//localhost:8070", eventSourceInitDict);
 	pushNotify.withCredentials = true;
 
+	pushNotify.addEventListener('error', function (e) {
+		console.log(e);
+		pushNotify.close();
+	 });
+
 	pushNotify.addEventListener('oscar-event', function (e) {
-		console.log(e.data)
+		console.log(e.data);
+		var newElement = document.createElement("li");
+		newElement.textContent = "message: " + e.data;
+		eventList.appendChild(newElement);
 	  })
 	/**
     pushNotify.onmessage = function (e) {
