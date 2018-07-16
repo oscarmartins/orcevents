@@ -54,7 +54,7 @@ window.addEventListener("load", function () {
 
 	pushNotify.addEventListener('error', function (e) {
 		console.log(e);
-		pushNotify.close();
+		//pushNotify.close();
 	 });
 
 	pushNotify.addEventListener('oscar-event', function (e) {

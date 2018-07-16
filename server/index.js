@@ -8,41 +8,28 @@ var sys = require('sys');
 
 const connections = [];
 const timers = [];
-const users = []
+const users = [];
+
 var server = http.createServer(function(req, res) {
-/**
-	 if (req.headers.accept && req.headers.accept == 'text/event-stream') {
-			sendSSE(req, res);
-		} else {
-			res.writeHead(200, {'Content-Type': 'text/html'});
-			//res.write(fs.readFileSync(__dirname + '/sse-node.html'));
-			res.end();
-		}
-	 */
 
 	const readCookie = get_cookies(req)['username'];
 	console.log('Read User: ', readCookie);
 	users.push(readCookie);
 
 // debugHeaders(req);
-if (req && res) {
-	res.on('close', () => {
-		console.log(this._events.request());
-	/**	server.getConnections(function(error, count) {
-			if (error)
-				throw error
-			console.log("close getConnections count: ", count);
-		})**/ 
-  })
+	if (req && res) {
+		res.on('close', () => {
+			console.log(this);
+  	})
 
-	const httpObj = {req: req, res: res}
-	connections.push(httpObj)
+		const httpObj = {user:readCookie, req: req, res: res};
+		connections.push(httpObj);
 	
 //	if (connections.length >= 3) {
 		for (var _c = 0; _c < connections.length; _c++) {
 			var jj = connections[_c]
 			if (jj.req.headers.accept && jj.req.headers.accept == 'text/event-stream') {
-				sendSSE(jj.req, jj.res);
+				sendSSE(jj.req, jj.res, jj.user);
 			} else {
 				jj.res.writeHead(200, {'Content-Type': 'text/html'});
 				//res.write(fs.readFileSync(__dirname + '/sse-node.html'));
@@ -55,7 +42,7 @@ if (req && res) {
 }).listen(8070)
 
 
-function sendSSE(req, res) {
+function sendSSE(req, res, user) {
 	res.writeHead(200, {
 	  'Content-Type': 'text/event-stream',
 	  'Cache-Control': 'no-cache',
@@ -66,7 +53,7 @@ function sendSSE(req, res) {
 	});
   
 	var id = (new Date()).toLocaleTimeString();
-	const base64 = Buffer.from("oscar").toString('base64');		
+	const base64 = user; // Buffer.from("oscar").toString('base64');		
 	
 	// Sends a SSE every 5 seconds on a single connection.
 	
