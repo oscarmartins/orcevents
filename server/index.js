@@ -4,8 +4,8 @@ serve.init();
  */
 var SSE = require('sse'), http = require('http')
 
-const connections = []
-
+const connections = [];
+const timers = [];
 var server = http.createServer(function(req, res) {
 
 	/**
@@ -17,6 +17,16 @@ var server = http.createServer(function(req, res) {
 			res.end();
 		}
 	 */
+
+
+
+	res.on('close', () => {
+		server.getConnections(function(error, count) {
+			if (error)
+				throw error
+			console.log("close getConnections count: ", count);
+		}) 
+  })
 
 	const httpObj = {req: req, res: res}
 	connections.push(httpObj)
@@ -45,20 +55,40 @@ function sendSSE(req, res) {
 	  'Content-Type': 'text/event-stream',
 	  'Cache-Control': 'no-cache',
 	  'Connection': 'keep-alive',
-	  'Access-Control-Allow-Origin': '*'
+		'Access-Control-Allow-Origin': 'http://localhost:8000',
+		'Access-Control-Allow-Credentials': true,
+		'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Oscar'
 	});
   
 	var id = (new Date()).toLocaleTimeString();
-  
+  const base64 = Buffer.from("oscar").toString('base64');		
 	// Sends a SSE every 5 seconds on a single connection.
-	setInterval(function() {
-	  constructSSE(res, id, (new Date()).toLocaleTimeString());
+	
+	const obj = {
+		rs: res,
+		rq: req,
+		tr: -1
+	};
+
+	obj.tr = setInterval(function() {
+		//constructSSE(res, id, (new Date()).toLocaleTimeString());
+		server.getConnections(function(error, count) {
+			if (error)
+				throw error
+			console.log("getConnections count: ", count);
+		}) 
+		constructSSE(res, id, base64);
+
 	}, 5000);
+
+
+	timers.push(obj);
   
 	//constructSSE(res, id, (new Date()).toLocaleTimeString());
   }
   
   function constructSSE(res, id, data) {
+	res.write('event: oscar-event\n');
 	res.write('id: ' + id + '\n');
 	res.write("data: " + data + '\n\n');
-  }
+	}

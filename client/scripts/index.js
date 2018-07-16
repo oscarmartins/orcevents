@@ -33,16 +33,18 @@ var pushNotify = null
 window.addEventListener("load", function () {
 	//nodejsWebsocket();
 	var eventList = document.querySelector('ul');
-    var eventSourceInitDict = {headers: {'Cookie': 'test=test'}};
-    pushNotify = new EventSource("//localhost:8070", eventSourceInitDict)
+    var eventSourceInitDict = {withCredentials: true, headers: {'Cookie': 'test=test', 'Oscar': '123'}};
+	pushNotify = new EventSource("//localhost:8070", eventSourceInitDict);
+	pushNotify.withCredentials = true;
+
+	pushNotify.addEventListener('oscar-event', function (e) {
+		console.log(e.data)
+	  })
+	/**
     pushNotify.onmessage = function (e) {
-	   
-		debugger
-
 		var newElement = document.createElement("li");
-
 		newElement.textContent = "message: " + e.data;
 		eventList.appendChild(newElement);
-       
-    }
+	}
+	 */
 })
