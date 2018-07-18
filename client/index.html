@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>web socket service</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="scripts/index.js"></script>
 </head>
 <body>
@@ -19,6 +20,35 @@
             
         </ul>
 
+        <div class="click" >click</div>
+
     </div>
+
+    <script>
+    
+    var jsonObjects = [{id:1, name:"amit"}, {id:2, name:"ankit"},{id:3, name:"atin"},{id:1, name:"puneet"}];
+
+(function($){
+	  $(function(){
+		 $('div.click').on('click',function () {
+             $.ajax({
+                url: 'http://localhost:8070/',
+                type: "POST",
+                data: JSON.stringify(jsonObjects),
+                dataType: "json",
+                beforeSend: function(x) {
+                    if (x && x.overrideMimeType) {
+                        x.overrideMimeType("application/json;charset=UTF-8");
+                    }
+                },
+                success: function(result) {
+
+                }});	  
+            });
+}); // end of document ready
+})(jQuery); // end of jQuery name space
+
+    </script>
+
 </body>
 </html>

@@ -1,28 +1,28 @@
-var connection
+var _connection;
 
 function nodejsWebsocket () {
 	var nickname = prompt("Choose a nickname")
 	if (nickname) {
-		connection = new WebSocket("ws://"+window.location.hostname+":8070")
-		connection.onopen = function () {
-			console.log("Connection opened")
-			connection.send(nickname)
+		_connection = new WebSocket("ws://"+window.location.hostname+":8070")
+		_connection.onopen = function () {
+			console.log("_connection opened")
+			_connection.send(nickname)
 			document.getElementById("form").onsubmit = function (event) {
 				var msg = document.getElementById("msg")
 				if (msg.value)
-					connection.send(msg.value)
+					_connection.send(msg.value)
 				msg.value = ""
 				event.preventDefault()
 			}	
 		}
-		connection.onclose = function () {
-            console.log("Connection closed")
+		_connection.onclose = function () {
+            console.log("_connection closed")
             window.location.reload(true)
 		}
-		connection.onerror = function () {
-			console.error("Connection error")
+		_connection.onerror = function () {
+			console.error("_connection error")
 		}
-		connection.onmessage = function (event) {
+		_connection.onmessage = function (event) {
 			var div = document.createElement("div")
 			div.textContent = event.data
 			document.body.appendChild(div)

@@ -31,7 +31,7 @@ var server = http.createServer(function(req, res) {
 			if (jj.req.headers.accept && jj.req.headers.accept == 'text/event-stream') {
 				sendSSE(jj.req, jj.res, jj.user);
 			} else {
-				jj.res.writeHead(200, {'Content-Type': 'text/html'});
+				jj.res.writeHead(200, {'Content-Type': 'text/html', 'Access-Control-Allow-Origin': 'http://localhost:8000'});
 				//res.write(fs.readFileSync(__dirname + '/sse-node.html'));
 				jj.res.end();
 			}
