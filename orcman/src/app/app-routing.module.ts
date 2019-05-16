@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PostsComponent } from './posts/posts.component';
-const routes = [
+
+const routes: Routes = [
   {
     path: '',
     redirectTo: 'posts',
@@ -14,6 +15,8 @@ const routes = [
 ];
 
 @NgModule({
+  declarations: [
+  ],
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
